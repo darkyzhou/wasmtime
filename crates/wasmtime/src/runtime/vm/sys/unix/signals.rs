@@ -345,6 +345,12 @@ unsafe fn get_trap_registers(cx: *mut libc::c_void, _signum: libc::c_int) -> Tra
                 pc: cx.uc_mcontext.arm_pc as usize,
                 fp: cx.uc_mcontext.arm_fp as usize,
             }
+        } else if #[cfg(all(target_os = "linux", target_arch = "loongarch64"))] {
+            let cx = &*(cx as *const libc::ucontext_t);
+            TrapRegisters {
+                pc: cx.uc_mcontext.__pc as usize,
+                fp: cx.uc_mcontext.__gregs[22] as usize, // $r22($fp)
+            }
         } else {
             compile_error!("unsupported platform");
             panic!();

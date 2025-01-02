@@ -23,6 +23,9 @@ cfg_if::cfg_if! {
     } else if #[cfg(target_arch = "arm")] {
         mod arm;
         use arm as imp;
+    } else if #[cfg(target_arch = "loongarch64")] {
+        mod loongarch64;
+        use loongarch64 as imp;
     } else {
         mod unsupported;
         use unsupported as imp;

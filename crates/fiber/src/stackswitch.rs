@@ -18,6 +18,8 @@ cfg_if::cfg_if! {
         // assembler file built with the `build.rs`.
     } else if #[cfg(target_arch = "riscv64")]  {
         mod riscv64;
+    } else if #[cfg(target_arch = "loongarch64")]  {
+        mod loongarch64;
     } else {
         compile_error!("fibers are not supported on this CPU architecture");
     }
