@@ -1,5 +1,5 @@
 fn main() {
-    if cfg!(feature = "x64") || cfg!(feature = "arm64") || cfg!(feature = "all-arch") {
+    if cfg!(feature = "x64") || cfg!(feature = "arm64") || cfg!(feature = "loong64") || cfg!(feature = "all-arch") {
         return;
     }
 
@@ -9,6 +9,8 @@ fn main() {
         println!("cargo:rustc-cfg=feature=\"x64\"");
     } else if arch == "aarch64" {
         println!("cargo:rustc-cfg=feature=\"arm64\"");
+    } else if arch == "loongarch64" {
+        println!("cargo:rustc-cfg=feature=\"loong64\"");
     } else {
         println!("cargo:rustc-cfg=feature=\"{arch}\"");
     }

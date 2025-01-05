@@ -1,0 +1,49 @@
+;; Instruction formats.
+(type MInst
+  (enum
+    ;; An load
+    (Load
+      (rd WritableReg)
+      (op LoadOP)
+      (flags MemFlags)
+      (from AMode))
+
+    ;; An Store
+    (Store
+      (to AMode)
+      (op StoreOP)
+      (flags MemFlags)
+      (src Reg))
+  )
+)
+
+(type LoadOP (enum
+  (Lb)
+  (Lh)
+  (Lw)
+  (Lbu)
+  (Lhu)
+  (Lwu)
+  (Ld)
+  (Flds)
+  (Fldd)
+))
+
+(type StoreOP (enum
+  (Sb)
+  (Sh)
+  (Sw)
+  (Sd)
+  (Fsts)
+  (Fstd)
+))
+
+;; An addressing mode specified for a load/store operation.
+;; Ref: Section 4.2 of https://github.com/loongson/la-toolchain-conventions/releases/tag/releases%2Fv1.1
+(type AMode
+  (enum
+    (RegOffset
+      (r Reg)
+      (offset i64))
+  )
+)

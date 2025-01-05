@@ -20,6 +20,9 @@ pub(crate) mod x64;
 #[cfg(feature = "arm64")]
 pub(crate) mod aarch64;
 
+#[cfg(feature = "loong64")]
+pub(crate) mod loongarch64;
+
 pub(crate) mod reg;
 
 macro_rules! isa_builder {
@@ -45,6 +48,9 @@ pub fn lookup(triple: Triple) -> Result<Builder> {
         }
         Architecture::Aarch64 { .. } => {
             isa_builder!(aarch64, (feature = "arm64"), triple)
+        }
+        Architecture::LoongArch64 => {
+            isa_builder!(loongarch64, (feature = "loong64"), triple)
         }
 
         _ => Err(anyhow!(LookupError::Unsupported)),

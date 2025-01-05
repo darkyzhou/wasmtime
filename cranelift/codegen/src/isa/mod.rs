@@ -72,6 +72,9 @@ pub mod aarch64;
 #[cfg(feature = "riscv64")]
 pub mod riscv64;
 
+#[cfg(feature = "loong64")]
+pub mod loongarch64;
+
 #[cfg(feature = "s390x")]
 mod s390x;
 

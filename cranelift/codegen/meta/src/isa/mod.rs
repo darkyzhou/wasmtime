@@ -6,6 +6,7 @@ mod arm64;
 mod pulley;
 mod riscv64;
 mod s390x;
+mod loong64;
 pub(crate) mod x86;
 
 /// Represents known ISA target.
@@ -17,6 +18,7 @@ pub enum Isa {
     Riscv64,
     Pulley32,
     Pulley64,
+    Loong64,
 }
 
 impl Isa {
@@ -35,6 +37,7 @@ impl Isa {
             "s390x" => Some(Isa::S390x),
             x if ["x86_64", "i386", "i586", "i686"].contains(&x) => Some(Isa::X86),
             "riscv64" | "riscv64gc" | "riscv64imac" => Some(Isa::Riscv64),
+            "loongarch64" => Some(Isa::Loong64),
             "pulley32" => Some(Isa::Pulley32),
             "pulley64" => Some(Isa::Pulley64),
             _ => None,
@@ -48,6 +51,7 @@ impl Isa {
             Isa::Arm64,
             Isa::S390x,
             Isa::Riscv64,
+            Isa::Loong64,
             Isa::Pulley32,
             Isa::Pulley64,
         ]
@@ -62,6 +66,7 @@ impl fmt::Display for Isa {
             Isa::Arm64 => write!(f, "arm64"),
             Isa::S390x => write!(f, "s390x"),
             Isa::Riscv64 => write!(f, "riscv64"),
+            Isa::Loong64 => write!(f, "loong64"),
             Isa::Pulley32 => write!(f, "pulley32"),
             Isa::Pulley64 => write!(f, "pulley64"),
         }
@@ -75,6 +80,7 @@ pub(crate) fn define(isas: &[Isa]) -> Vec<TargetIsa> {
             Isa::Arm64 => arm64::define(),
             Isa::S390x => s390x::define(),
             Isa::Riscv64 => riscv64::define(),
+            Isa::Loong64 => loong64::define(),
             Isa::Pulley32 | Isa::Pulley64 => pulley::define(),
         })
         .collect()

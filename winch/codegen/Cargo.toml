@@ -29,9 +29,11 @@ wasmtime-cranelift = { workspace = true }
 [features]
 x64 = ["cranelift-codegen/x86"]
 arm64 = ["cranelift-codegen/arm64"]
+loong64 = ["cranelift-codegen/loong64"]
 all-arch = [
     "x64",
     "arm64",
+    "loong64",
 ]
 gc = ['wasmtime-environ/gc']
 gc-drc = ['wasmtime-environ/gc-drc']
