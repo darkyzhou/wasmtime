@@ -21,9 +21,19 @@ pub(crate) const fn freg(num: u8) -> Reg {
     Reg::new(PReg::new(num as usize, RegClass::Float))
 }
 
+/// Zero register.
+pub(crate) const fn zero() -> Reg {
+    rreg(0)
+}
+
 /// Scratch register.
 pub(crate) const fn scratch() -> Reg {
     rreg(20)
+}
+
+/// Scratch register 2.
+pub(crate) const fn scratch2() -> Reg {
+    rreg(19)
 }
 
 // Float scratch register.

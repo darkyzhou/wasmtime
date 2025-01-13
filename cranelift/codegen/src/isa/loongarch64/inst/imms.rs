@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter, Result};
+
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Imm12 {
     /// 16-bit container where the low 12 bits are the data payload.
@@ -52,5 +54,28 @@ impl Into<i64> for Imm12 {
 impl Display for Imm12 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(f, "{:+}", self.as_i16())
+    }
+}
+
+/// An immediate for shift instructions.
+#[derive(Copy, Clone, Debug)]
+pub struct ImmShift {
+    /// 6-bit shift amount.
+    pub imm: u8,
+}
+
+impl ImmShift {
+    /// Create an ImmShift from raw bits, if possible.
+    pub fn maybe_from_u64(val: u64) -> Option<ImmShift> {
+        if val < 64 {
+            Some(ImmShift { imm: val as u8 })
+        } else {
+            None
+        }
+    }
+
+    /// Get the immediate value.
+    pub fn value(&self) -> u8 {
+        self.imm
     }
 }

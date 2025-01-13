@@ -14,6 +14,103 @@
       (op StoreOP)
       (flags MemFlags)
       (src Reg))
+
+    ;; An ALU operation with a register source and a register destination.
+    (AluRR
+      (alu_op AluOPRR)
+      (rd WritableReg)
+      (rj Reg)
+      (size OperandSize)
+    )
+
+    ;; An ALU operation with two register sources and a register destination.
+    (AluRRR
+      (alu_op AluOPRRR)
+      (rd WritableReg)
+      (rj Reg)
+      (rk Reg)
+      (size OperandSize)
+    )
+
+    ;; An ALU operation with a register source and
+    ;; an immediate-12 source, and a register destination.
+    (AluRRImm12
+      (alu_op AluOPRRI)
+      (rd WritableReg)
+      (rj Reg)
+      (imm12 Imm12)
+      (size OperandSize)
+    )
+
+    ;; An ALU operation with a register source and
+    ;; an immediate-shiftamt source, and a register destination.
+    (AluRRImmShift
+      (alu_op AluOPRRI)
+      (rd WritableReg)
+      (rj Reg)
+      (imm ImmShift)
+      (size OperandSize)
+    )
+
+    ;; An FPU operation with a register source and a register destination.
+    (FpuRR
+      (alu_op FpuOPRR)
+      (fd WritableReg)
+      (fj Reg)
+      (size OperandSize)
+    )
+    
+    ;; FPU comparison operation with two register input.
+    (FpuCmp
+      (alu_op FpuOPRR)
+      (fj Reg)
+      (fk Reg)
+      (size OperandSize)
+    )
+    
+    ;; An FPU operation with two register sources and a register destination.
+    (FpuRRR
+      (alu_op FpuOPRRR)
+      (fd WritableReg)
+      (fj Reg)
+      (fk Reg)
+      (size OperandSize)
+    )
+
+    ;; Round to integer.
+    (FpuRound
+      (op FpuRoundMode)
+      (fd WritableReg)
+      (fj Reg)
+    )
+
+    ;; A conditional trap: execute a `udf` if the condition is true. This is
+    ;; one VCode instruction because it uses embedded control flow; it is
+    ;; logically a single-in, single-out region, but needs to appear as one
+    ;; unit to the register allocator.
+    ;;
+    ;; The `CondBrKind` gives the conditional-branch condition that will
+    ;; *execute* the embedded `Inst`. (In the emitted code, we use the inverse
+    ;; of this condition in a branch that skips the trap instruction.)
+    (TrapIf
+      (kind CondBrKind)
+      (trap_code TrapCode)
+    )
+
+    ;; A conditional-set operation.
+    ;; This is a VCode here, since LoongArch doesn't come with something
+    ;; like NZCV register in AArch64, we choose to emulate it with $t7
+    (CSet
+      (rd WritableReg)
+      (kind IntCC)
+    )
+    
+    ;; A float conditional-set operation.
+    ;; This is a VCode here, since LoongArch doesn't come with something
+    ;; like NZCV register in AArch64, we choose to emulate it with $fcc0
+    (FCSet
+      (fd WritableReg)
+    )
   )
 )
 
@@ -47,3 +144,93 @@
       (offset i64))
   )
 )
+
+(type AluOPRR
+  (enum
+    (Clz)
+    (Ctz)
+  )
+)
+
+(type AluOPRRI
+  (enum
+    (Addi)
+    (Andi)
+    (Ori)
+    (Xori)
+    (Slli)
+    (Srli)
+    (Srai)
+    (Rotri)
+  )
+)
+
+(type AluOPRRR
+  (enum
+    (Add)
+    (Sub)
+    (Mul)
+    (Div)
+    (DivU)
+    (Mod)
+    (ModU)
+    (And)
+    (Or)
+    (Xor)
+    (Sll)
+    (Srl)
+    (Sra)
+    (Rotr)
+  )
+)
+
+(type FpuOPRRR
+  (enum
+    (Add)
+    (Sub)
+    (Mul)
+    (Div)
+    (Max)
+    (Min)
+    (CopySign)
+  )
+)
+
+(type FpuOPRR
+  (enum
+    (Abs)
+    (Neg)
+    (Sqrt)
+    (Ceq)
+    (Cne)
+    (Clt)
+    (Cle)
+  )
+)
+
+(type Imm12 (primitive Imm12))
+(type ImmShift (primitive ImmShift))
+(type Cond (primitive Cond))
+(type CondBrKind (primitive CondBrKind))
+
+(model OperandSize
+      (enum (Size32 32)
+            (Size64 64)))
+
+(type OperandSize extern
+      (enum Size32
+            Size64))
+
+;; Modes for FP rounding ops: round down (floor) or up (ceil), or toward zero (trunc), or to
+;; nearest, and for 32- or 64-bit FP values.
+(type FpuRoundMode
+  (enum
+    (Minus32)
+    (Minus64)
+    (Plus32)
+    (Plus64)
+    (Zero32)
+    (Zero64)
+    (Nearest32)
+    (Nearest64)
+))

@@ -23,6 +23,7 @@ impl ABI for LoongArch64ABI {
     }
 
     fn word_bits() -> u8 {
+        // FIXME: 32?
         64
     }
 

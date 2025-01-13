@@ -39,8 +39,8 @@ wasmtime-wast-util = { path = '../wast-util' }
 # We rely on precompiled v8 binaries, but rusty-v8 doesn't have a precompiled
 # binary for MinGW which is built on our CI. It does have one for Windows-msvc,
 # though, so we could use that if we wanted. For now though just simplify a bit
-# and don't depend on this on Windows.  The same applies on s390x and riscv.
-[target.'cfg(not(any(windows, target_arch = "s390x", target_arch = "riscv64")))'.dependencies]
+# and don't depend on this on Windows. The same applies on s390x, riscv and loongarch.
+[target.'cfg(not(any(windows, target_arch = "s390x", target_arch = "riscv64", target_arch = "loongarch64")))'.dependencies]
 v8 = "129.0.0"
 
 [dev-dependencies]
